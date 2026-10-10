@@ -1,1 +1,0 @@
-web: java -Xms350m -Xmx350m -XX:MaxGCPauseMillis=500 -jar application.jar
