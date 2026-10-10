@@ -2,3 +2,5 @@ secrets.py
 src/main/.DS_Store
 build/application.jar
 target/
+build/
+.DS_Store
