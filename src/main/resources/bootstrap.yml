@@ -1,0 +1,21 @@
+server:
+  port: ${SAMAAJ_SEVA_PORT:8093}
+
+spring:
+  application:
+    name: ${SAMAAJ_SEVA_APPLICATION_NAME:samaaj-seva}
+  cloud:
+    consul:
+      host: ${SAMAAJ_SEVA_CONSUL_HOST:localhost}
+      port: ${SAMAAJ_SEVA_CONSUL_PORT:8500}
+      enabled: ${SAMAAJ_SEVA_CONSUL_ENABLED:false}
+      scheme: ${SAMAAJ_SEVA_CONSUL_SCHEME:http}
+      config:
+        enabled: ${SAMAAJ_SEVA_CONSUL_CONFIG_ENABLED:true}
+        fail-fast: ${SAMAAJ_SEVA_CONSUL_CONFIG_FAIL_FAST:true}
+        watch:
+          enabled: ${SAMAAJ_SEVA_CONSUL_CONFIG_WATCH_ENABLED:true}
+  datasource:
+    url: ${SAMAAJ_SEVA_SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/samaaj?autoReconnect=true}
+    username: ${SAMAAJ_SEVA_SPRING_DATASOURCE_USER_NAME:root}
+    password: ${SAMAAJ_SEVA_SPRING_DATASOURCE_PASSWORD:root@pass}

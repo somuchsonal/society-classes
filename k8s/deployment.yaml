@@ -1,0 +1,53 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    iam.gke.io/gcp-service-account: sa-mum-prod-k8s-cluster@fr-prod-375111.iam.gserviceaccount.com
+  name: gke-sa
+  namespace: prod
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: samaaj-seva
+  namespace: prod
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: samaaj-seva
+  template:
+    metadata:
+      labels:
+        app: samaaj-seva
+    spec:
+      containers:
+        - name: samaaj-seva
+          env:
+             - name: SAMAAJ_SEVA_CONSUL_HOST
+               value: 172.25.0.11
+             - name: SAMAAJ_SEVA_CONSUL_ENABLED
+               value: "true"
+             - name: SAMAAJ_SEVA_SPRING_DATASOURCE_URL
+               value: "jdbc:mysql://172.25.41.58:3306/samaaj?autoReconnect=true"
+             - name: SAMAAJ_SEVA_SPRING_REDIS_HOST
+               value: 172.25.40.3
+             - name: SAMAAJ_SEVA_SPRING_REDIS_CLUSTER
+               value: 172.25.40.3
+             - name: SAMAAJ_SEVA_KAFKA_BOOTSTRAP_ADDRESS
+               value: "172.25.0.14:9092"
+             - name: SAMAAJ_SEVA_PORT
+               value: "8080"
+             - name: SAMAAJ_SEVA_LIQUIBASE_ENABLED
+               value: "true"
+             - name: SENTRY_DSN
+               value: "https://1eb2e055e2af4e319bf945bc214418e9@o379665.ingest.sentry.io/4504756375453696"
+             - name: SENTRY_ENVIRONMENT
+               value: "prod"
+          image: "asia-south1-docker.pkg.dev/fr-prod-375111/fr-prod-artifact-registry/samaaj-prod"
+          ports:
+            - containerPort: 8080
+      serviceAccountName: gke-sa
+      nodeSelector:
+        iam.gke.io/gke-metadata-server-enabled: "true"

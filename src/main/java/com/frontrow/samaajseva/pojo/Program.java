@@ -1,0 +1,16 @@
+package com.frontrow.samaajseva.pojo;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Data;
+
+@Data
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class Program {
+    private String categoryName;
+
+    private String level;
+
+    private Integer durationInMonths;
+}

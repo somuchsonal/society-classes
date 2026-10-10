@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+
+    <springProperty name="LOG_HOME" source="log.home"/>
+    <springProperty name="APPLICATION_NAME" source="spring.application.name"/>
+    <springProperty name="SENTRY_LEVEL" source="sentry.level"/>
+
+    <appender name="APPLICATION_LOGGER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/${APPLICATION_NAME}/application.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${LOG_HOME}/${APPLICATION_NAME}/archived/application.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- keep 30 days' worth of history capped at 1GB total size -->
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - {%mdc} %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="REQUEST_LOGGER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/${APPLICATION_NAME}/request.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${LOG_HOME}/${APPLICATION_NAME}/archived/request.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>25MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- keep 30 days' worth of history capped at 1GB total size -->
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ERROR_LOGGER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/${APPLICATION_NAME}/error.log</file>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- daily rollover -->
+            <fileNamePattern>${LOG_HOME}/${APPLICATION_NAME}/archived/error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- keep 30 days' worth of history capped at 1GB total size -->
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>1GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - {%mdc} %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="SENTRY" class="io.sentry.logback.SentryAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>${SENTRY_LEVEL}</level>
+        </filter>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - {%mdc} %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="APPLICATION_LOGGER_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="APPLICATION_LOGGER" />
+        <queueSize>1000</queueSize>
+        <discardingThreshold>5</discardingThreshold>
+        <maxFlushTime>5000</maxFlushTime>
+        <neverBlock>true</neverBlock>
+    </appender>
+    <appender name="REQUEST_LOGGER_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="REQUEST_LOGGER" />
+        <queueSize>500</queueSize>
+        <discardingThreshold>10</discardingThreshold>
+        <maxFlushTime>3000</maxFlushTime>
+        <neverBlock>true</neverBlock>
+    </appender>
+    <appender name="ERROR_LOGGER_ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="ERROR_LOGGER" />
+        <queueSize>1000</queueSize>
+        <discardingThreshold>0</discardingThreshold>
+        <maxFlushTime>5000</maxFlushTime>
+    </appender>
+
+    <logger name="root" level="ERROR">
+        <appender-ref ref="ERROR_LOGGER_ASYNC"/>
+    </logger>
+    <logger name="com.frontrow.samaajseva.filter.RequestLoggingFilter" level="DEBUG" additivity="false">
+        <appender-ref ref="REQUEST_LOGGER_ASYNC"/>
+    </logger>
+    <root level="INFO">
+        <appender-ref ref="APPLICATION_LOGGER_ASYNC"/>
+        <appender-ref ref="SENTRY" />
+    </root>
+</configuration>

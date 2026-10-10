@@ -1,0 +1,24 @@
+apiVersion: cloud.google.com/v1beta1
+kind: BackendConfig
+metadata:
+  namespace: prod
+  name: cloud-armor
+spec:
+  securityPolicy:
+    name: fr-mum-prod-cloud-armor-policy
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: samaaj-seva
+  namespace: prod
+  annotations:
+    cloud.google.com/neg: '{"ingress": true}' 
+spec:
+  selector:
+    app: samaaj-seva
+  type: NodePort
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080

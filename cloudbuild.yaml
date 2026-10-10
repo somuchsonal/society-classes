@@ -1,0 +1,42 @@
+---
+steps:
+  - name: maven:3.8.1-openjdk-17
+    args:
+      - clean
+      - install
+      - package
+      - -DskipTests
+    entrypoint: mvn
+  - name: ubuntu
+    args:
+      - -c
+      - |
+        mkdir build
+        echo "*************/workspace**********"
+        ls /workspace
+        echo "*************/workspace/target/**********"
+        ls -l /workspace/target/
+        cp -r /workspace/target/samaaj-seva-0.0.1-SNAPSHOT.jar build/
+        mv build/samaaj-seva-0.0.1-SNAPSHOT.jar build/application.jar
+        cp -r src/main/resources/procfile/Procfile-prod build/
+    entrypoint: sh
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - asia-south1-docker.pkg.dev/fr-prod-375111/fr-prod-artifact-registry/samaaj-prod:$SHORT_SHA
+      - .
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - asia-south1-docker.pkg.dev/fr-prod-375111/fr-prod-artifact-registry/samaaj-prod:$SHORT_SHA
+  - name: gcr.io/cloud-builders/gke-deploy
+    args:
+      - run
+      - --filename=k8s/
+      - --image=asia-south1-docker.pkg.dev/fr-prod-375111/fr-prod-artifact-registry/samaaj-prod:$SHORT_SHA
+      - --location=asia-south1
+      - --cluster=fr-mum-prod-gke-cluster
+logsBucket: gs://fr-mum-prod-cloud-build-logs
+options:
+  logging: GCS_ONLY

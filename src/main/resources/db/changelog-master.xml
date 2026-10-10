@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    <include file="/db/changelogs/1-init.sql"/>
+    <include file="/db/changelogs/2-init.sql"/>
+    <include file="/db/changelogs/3-init_update.sql"/>
+    <include file="/db/changelogs/4-set_updated_by.sql"/>
+    <include file="/db/changelogs/5-rename_instructor.sql"/>
+    <include file="/db/changelogs/6-alter_table_batch.sql"/>
+    <include file="/db/changelogs/7-alter_table_session.sql"/>
+    <include file="/db/changelogs/8-alter_table_membership.sql"/>
+    <include file="/db/changelogs/9-alter_table_topic.sql"/>
+    <include file="/db/changelogs/10-alter_table_attendance.sql"/>
+    <include file="/db/changelogs/11-drop_table_society_instructor.sql"/>
+    <include file="/db/changelogs/12-alter_table_chapter.sql"/>
+    <include file="/db/changelogs/13-alter_table_session.sql"/>
+    <include file="/db/changelogs/14-alter_table_topic.sql"/>
+    <include file="/db/changelogs/15-alter_table_membership.sql"/>
+    <include file="/db/changelogs/16-alter_table_instructor_attendance.sql"/>
+    <include file="/db/changelogs/17-alter_table_kid_topic_tracking.sql"/>
+    <include file="/db/changelogs/18-alter_table_kid.sql"/>
+    <include file="/db/changelogs/19-alter_table_session.sql"/>
+    <include file="/db/changelogs/20-create_table_additional_session.sql"/>
+    <include file="/db/changelogs/21-create_table_additional_session_kid_mapping.sql"/>
+    <include file="/db/changelogs/22-alter_table_session.sql"/>
+    <include file="/db/changelogs/23-alter_table_additional_session.sql"/>
+    <include file="/db/changelogs/24-alter_table_kid_topic_tracking.sql"/>
+    <include file="/db/changelogs/25-alter_table_membership.sql"/>
+    <include file="/db/changelogs/26-create_table_video.sql"/>
+    <include file="/db/changelogs/27-alter_table_attendance.sql"/>
+    <include file="/db/changelogs/28-add_indices.sql"/>
+    <include file="/db/changelogs/29-alter_table_kid_attendance.sql"/>
+    <include file="/db/changelogs/30-create_table_lead.sql"/>
+    <include file="/db/changelogs/31-alter_table_chapter.sql"/>
+    <include file="/db/changelogs/32-create_table_kid_report_completion.sql"/>
+    <include file="/db/changelogs/33-alter_table_society.sql"/>
+</databaseChangeLog>
+
